@@ -1,9 +1,24 @@
+use std::{error::Error};
+use csv;
 
+fn read_csv(path: &str) -> Result<(), Box<dyn Error>> {
+    let mut reader = csv::Reader::from_path(path)?;
+    
+    let mut index = 1;
+    for record in reader.records() {
+        let result = record?;
+        let mut msg = String::new();
 
-fn read_csv(path: &str) -> Result<> {
-    let records = 
+        for field in result.iter() {
+            msg.push_str(&format!("{field}, "));
+        }
+        println!("msg {index} => {msg}");
+        index +=1;
+    }
     Ok(())
 }
 fn main() {
-    read_csv("./customers.csv")
+    if let Err(e) = read_csv("./customers.csv") {
+        eprintln!("Error: {}", e);
+    }
 }
